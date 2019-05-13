@@ -8,8 +8,12 @@ Todo list:
 - [ ] Admin can select upload images append to train data.
 - [ ] Guest can how much upload images were predicted for each categories.
 
-Access to application here https://pythonai.herokuapp.com/
+Run:
+```python
+python train-multiclass.py
+python app.py
+```
 
 [Fork from](https://github.com/ferrygun/AIFlowers2)
-[Train data - Flowers Recognition](https://www.kaggle.com/alxmamaev/flowers-recognition)
+[Train data](https://www.kaggle.com/alxmamaev/flowers-recognition)
 

@@ -17,7 +17,7 @@ img_width, img_height = 150, 150
 model_path = './models/model.h5'
 model_weights_path = './models/weights.h5'
 model = load_model(model_path)
-#model.load_weights(model_weights_path)
+model.load_weights(model_weights_path)
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg'])
