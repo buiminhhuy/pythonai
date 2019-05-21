@@ -21,6 +21,7 @@ model.load_weights(model_weights_path)
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg'])
+CATEGORY_HASHMAP = {0: "Daisy", 1: "Dandelion", 2: "Rose", 3: "Sunflower", 4: "Tulip" }
 
 def get_as_base64(url):
     return base64.b64encode(requests.get(url).content)
@@ -33,16 +34,7 @@ def predict(file):
     result = array[0]
     print(result)
     answer = np.argmax(result)
-    if answer == 0:
-        print("Label: Daisy")
-    elif answer == 1:
-	    print("Label: Dandelion")
-    elif answer == 2:
-	    print("Label: Rose")
-    elif answer == 3:
-	    print("Label: Sunflower")
-    elif answer == 4:
-	    print("Label: Tulip")
+    print("Label: " + CATEGORY_HASHMAP[answer])
     return answer
 
 def my_random_string(string_length=10):
@@ -60,10 +52,21 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/")
-def template_test():
+def index():
     return render_template('template.html', label='', imagesource='../uploads/template.jpg')
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/adjust", methods=['GET', 'POST'])
+def adjust():
+    if request.method == 'POST':
+        flowerid = request.form['flowerid']
+        label = CATEGORY_HASHMAP[int(flowerid)]
+        imgpath = request.form['imgpath']
+        print('flower:' + label + ', path:' + imgpath)
+        return render_template('template.html', label=label, imagesource=imgpath)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         import time
@@ -76,23 +79,17 @@ def upload_file():
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
             result = predict(file_path)
-            if result == 0:
-                label = 'Daisy'
-            elif result == 1:
-                label = 'Dandelion'
-            elif result == 2:
-                label = 'Rose'			
-            elif result == 3:
-                label = 'Sunflowers'
-            elif result == 4:
-                label = 'Tulip'
+            label = CATEGORY_HASHMAP[result]
             print(result)
             print(file_path)
+            print(label)
             filename = my_random_string(6) + filename
 
             os.rename(file_path, os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print("--- %s seconds ---" % str (time.time() - start_time))
             return render_template('template.html', label=label, imagesource='../uploads/' + filename)
+    else:
+        return redirect(url_for('index'))
 
 from flask import send_from_directory
 

@@ -1,33 +1,79 @@
-<html>
-<title>Flowers AI</title>
-<!-- stylesheets -->
-<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
-<div class="row">
- 
-  <div class="col-md-7">
-    <h1>Flowers AI - Daisy, Dandelion, Rose, Sunflower or Tulip ?</h1>
-	<h2>Upload a flower image</h2>
-    <br>
-    <form action="" method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Image Recognition AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $(function() {
+            $('#customFile').change(function() { 
+              var file = $('#customFile')[0].files[0].name;
+              $('#choose_file_label').text(file);
+            });
+        });
+        
+    </script>
+</head>
+<body>
+  <div class="container">
+      <div class="row mb-5"> 
+          <div class="col"> 
+              <blockquote class="blockquote text-center">
+                <h1>Image Recognition AI</h1>
+                <footer class="blockquote-footer">Predict image into categories<cite title="Categories">Daisy, Dandelion, Rose, Sunflower or Tulip</cite></footer>
+              </blockquote>
+          </div> 
+      </div>
 
-    <h2>Results</h2>
-    <br>
-    <table class="table" id="results-table">
-        <tr>
-          <th>Image</th>
-          <th>Prediction</th>
-        </tr>
-		<tr>
-          {% block content %}{% endblock %}
-        </tr>
-    </table>
+      <div class="row mb-5">
+          <div class="col-6">
+              <label>Upload a flower image</label> 
+              <form action="/upload" method=post enctype=multipart/form-data class="input-group">
+                    <div class="custom-file mr-5">
+                        <input type="file" name=file class="custom-file-input" id="customFile">
+                        <label class="custom-file-label" for="customFile" id="choose_file_label">Choose file</label>
+                    </div>
+                    
+                    <div class="input-group-append ml-5"> 
+                        <input type=submit value=Upload class="btn btn-primary">
+                    </div>
+              </form> 
+          </div>
+      </div> 
+
+      <div class="row">
+          <div class="col"> 
+              <h6 class="alert alert-primary">Results</h6>
+              <table class="table" id="results-table">
+                  <tr>
+                    <th class="alert alert-info">Image</th>
+                    <th class="alert alert-info">Prediction</th>
+                    <th class="alert alert-info">Adjust</th>
+                  </tr>
+                  <tr>
+                    {% block content %}{% endblock %}
+                    <th>
+                        <form action = "/adjust" method = "POST" class="form-inline">
+                            <select name="flowerid" class="custom-select my-1 mr-sm-2">
+                                <option selected>Choose...</option>
+                                <option value="0">Daisy</option>
+                                <option value="1">Dandelion</option>
+                                <option value="2">Rose</option>
+                                <option value="3">Sunflower</option>
+                                <option value="4">Tulip</option>
+                              </select>  
+                              <input name=imgpath value="{{imagesource}}" hidden=true />
+                              <button type="submit" class="btn btn-primary my-1">Adjust</button>
+                        </form>
+                    </th>
+                  </tr>
+              </table>
+          </div>
+      </div> 
   </div>
- 
-</div>
-
+</body>
 </html>
  
